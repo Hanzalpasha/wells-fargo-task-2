@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "advisors")
-public class Advisor {
+@Table(name = "customers")
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,17 +23,22 @@ public class Advisor {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "advisor", cascade = CascadeType.ALL)
-    private List<Customer> customers;
+    @ManyToOne
+    @JoinColumn(name = "advisor_id", nullable = false)
+    private Advisor advisor;
 
-    public Advisor() {}
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Portfolio> portfolios;
 
-    public Advisor(String firstName, String lastName, String email, String phoneNumber, List<Customer> customers) {
+    public Customer() {}
+
+    public Customer(String firstName, String lastName, String email, String phoneNumber, Advisor advisor, List<Portfolio> portfolios) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.customers = customers;
+        this.advisor = advisor;
+        this.portfolios = portfolios;
     }
 
     public Long getId() {
@@ -72,11 +77,19 @@ public class Advisor {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Customer> getCustomers() {
-        return customers;
+    public Advisor getAdvisor() {
+        return advisor;
     }
 
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
+    public void setAdvisor(Advisor advisor) {
+        this.advisor = advisor;
+    }
+
+    public List<Portfolio> getPortfolios() {
+        return portfolios;
+    }
+
+    public void setPortfolios(List<Portfolio> portfolios) {
+        this.portfolios = portfolios;
     }
 }
